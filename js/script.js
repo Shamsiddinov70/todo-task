@@ -1,18 +1,16 @@
 var elInput = elfind('.js-input');
 var elList = elfind('.todos-list')
 
+var localData = localStorage.getItem('todos');
+var todos = JSON.parse(localData) ? JSON.parse(localData) : [];
 
-var todos = [
-];
+// console.log(JSON.parse(localData))
 
-// function createTodoItem () {
 
-// }
-
-function render (array) {
+function render(array) {
     elList.innerHTML = null;
 
-    for (var i = 0; i < array.length; i++){
+    for (var i = 0; i < array.length; i++) {
         var elLi = elCreate('li');
         var elCheckboxInput = elCreate('input');
         var elText = elCreate('p');
@@ -45,17 +43,19 @@ function render (array) {
 
 render(todos);
 
-function handleAddTodo (evt) {
+function handleAddTodo(evt) {
 
     if (evt.keyCode === 13) {
 
         var newTodo = {
-            id: 1,
+            id: uuid.v4(),
             title: elInput.value,
             isComplated: false,
         }
 
-        todos.push(newTodo);
+        todos.unshift(newTodo);
+
+        localStorage.setItem('todos', JSON.stringify(todos))
         render(todos);
         elInput.value = null;
     }
@@ -63,3 +63,4 @@ function handleAddTodo (evt) {
 
 }
 elInput.addEventListener('keyup', handleAddTodo)
+render(todos);
